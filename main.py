@@ -221,15 +221,6 @@ class DigitalOceanCrawler(AbstractCrawler):
         return df_row
 
 
-def digital_ocean_standard_pricing_crawler():
-    url = 'https://www.digitalocean.com/pricing/'
-    request = requests.request('GET', url)
-    soup = BeautifulSoup(request.content, 'html.parser')
-
-    tr_list = soup.find('div', {'id': 'standard-droplets-pricing-table'}).find('tbody').find_all('tr')
-    data = [[list(td_list.strings) for td_list in tr.find_all('td')] for tr in tr_list]
-
-
 if __name__ == '__main__':
     args = get_args(argv[1:])
     vultur_crawler = VulturCrawler(break_on_error=True)
