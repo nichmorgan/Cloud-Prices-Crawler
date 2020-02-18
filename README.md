@@ -12,7 +12,7 @@ www.digitalocean.com/pricing/
 
 <code>python main.py [-h] [--print] [--save_csv] [--save_json]</code>  
 
-####optional arguments:  
+#### optional arguments:  
 * -h, --help  
     show this help message and exit  
       
