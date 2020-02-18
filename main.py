@@ -23,8 +23,8 @@ def get_args(args):
 
 
 class AbstractCrawler():
-    def __init__(self, url, enterprise=None, bs4_parser='html.parser',
-                 columns=None, ignore_error=False, break_on_error=False):
+    def __init__(self, url: str, enterprise: str = None, bs4_parser: str = 'html.parser',
+                 columns: list = None, ignore_error: bool = False, break_on_error: bool = False):
         self.url = url
         self.soup = BeautifulSoup(self.get_content(), bs4_parser)
         self.enterprise = enterprise
@@ -40,29 +40,57 @@ class AbstractCrawler():
         self._df = pd.DataFrame(columns=self._columns)
         self.update_data()
 
-    def get_content(self):
+    def get_content(self) -> str:
+        """
+        Site html string doc content.
+        """
         request = requests.request('GET', self.url)
         if request.status_code == 200:
             return request.content
         else:
             raise Exception('Bad request! Status: %s' % request.status_code)
 
-    def get_content_data_table(self):
+    def get_content_data_table(self) -> list:
+        """
+        Return a matrix (table) with the data
+        """
         raise NotImplementedError
 
-    def col_process(self, col):
+    def col_process(self, col: list) -> str:
+        """
+        Convert column list to string.
+
+        :param col: The column list
+        :returns: a row of string
+        """
         col = re.sub(r'([\n\t])', '', ' '.join(col)).strip()
         col = re.sub(r' {2}', ' ', col)
 
         return col
 
-    def row_process(self, row):
+    def row_process(self, row: list) -> list:
+        """
+        Process the row to convert into pandas dataframe after in another function.
+
+        :param row: List of strings
+        :return: list
+        """
         raise NotImplementedError
 
-    def drop_data(self):
+    def drop_data(self) -> None:
+        """
+        Drop all the dataframe
+
+        :return: None
+        """
         self._df.drop(self._df.index, inplace=True)
 
-    def update_data(self):
+    def update_data(self) -> None:
+        """
+        Recrawl the site and override the data dataframe
+
+        :return: None
+        """
         df = pd.DataFrame(columns=self._columns)
         data = self.get_content_data_table()
 
@@ -100,7 +128,7 @@ class AbstractCrawler():
         return self._columns
 
     @columns.setter
-    def columns(self, columns: list):
+    def columns(self, columns: list) -> None:
         if len(columns) == len(self._columns):
             self._columns = columns
         else:
