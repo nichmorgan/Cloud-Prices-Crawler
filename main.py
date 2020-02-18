@@ -204,8 +204,8 @@ def digital_ocean_standard_pricing_crawler():
 
 if __name__ == '__main__':
     args = get_args(argv[1:])
-    vultur_crawler = VulturCrawler(break_on_error=1)
-    digital_ocean_crawler = DigitalOceanCrawler(break_on_error=1)
+    vultur_crawler = VulturCrawler(break_on_error=True)
+    digital_ocean_crawler = DigitalOceanCrawler(break_on_error=True)
 
     data = vultur_crawler.data.append(digital_ocean_crawler.data, ignore_index=True)
     if args.print: pprint(data)
